@@ -3,7 +3,14 @@
 - Near-infinite typescript number literal calculator
 - Currently supports up to 49 digit result value
 
-To install dependencies:
+### Todo
+- [x] Add
+- [ ] Sub
+- [ ] Mul
+- [ ] Div
+- [ ] Mod
+
+### To install dependencies:
 
 ```bash
 bun install
