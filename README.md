@@ -1,5 +1,7 @@
 # ts-infi-calc
 
+Near-infinite typescript number literal calculator(49 digits currently)
+
 To install dependencies:
 
 ```bash
