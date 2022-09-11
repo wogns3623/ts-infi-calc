@@ -1,6 +1,7 @@
 # ts-infi-calc
 
-Near-infinite typescript number literal calculator(49 digits currently)
+- Near-infinite typescript number literal calculator
+- Currently supports up to 49 digit result value
 
 To install dependencies:
 
