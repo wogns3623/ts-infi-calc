@@ -1,0 +1,10 @@
+{
+  "name": "ts-infi-calc",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "^0.1.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
+  }
+}
