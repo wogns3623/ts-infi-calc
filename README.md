@@ -4,11 +4,16 @@
 - Currently supports up to 49 digit result value
 
 ### Todo
+
 - [x] Add
-- [ ] Sub
+- [x] Sub
 - [ ] Mul
 - [ ] Div
 - [ ] Mod
+- [ ] Pow ?
+- [ ] Factorial ?
+- [ ] Square root ?
+- [ ] Log ?
 
 ### To install dependencies:
 

@@ -1,13 +1,14 @@
 import T from '@test';
+import { TrimLeft } from './common';
 import { ParseInt, ToString } from './stringLiteral';
 
-// 49 digits
+// max 49 digits
 type MaxPossibleInteger = 1234567890123456789012345678901234567890123456789n;
 type MaxPossibleIntegerString = '1234567890123456789012345678901234567890123456789';
 // prettier-ignore
 type MaxPossibleIntegerStringArray =  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-type StringToCharArray<S extends string> = S extends `${infer C}${infer R}`
+export type StringToCharArray<S extends string> = S extends `${infer C}${infer R}`
   ? [C, ...StringToCharArray<R>]
   : [];
 
@@ -20,8 +21,8 @@ type TestStringToArray = T.Test.All<
 
 // Check maximum
 type TestStringToArrayMax = StringToCharArray<'1234567890123456789012345678901234567890123456789'>;
-type TestStringToArrayOver =
-  StringToCharArray<'12345678901234567890123456789012345678901234567890'>;
+// type TestStringToArrayOver =
+//   StringToCharArray<'12345678901234567890123456789012345678901234567890'>;
 
 type CharArrayToString<A extends string[]> = A extends [
   infer C extends string,
@@ -34,6 +35,7 @@ type TestCharArrayToString = T.Test.All<
   [
     T.Eq<'123', CharArrayToString<['1', '2', '3']>>,
     T.Eq<MaxPossibleIntegerString, CharArrayToString<MaxPossibleIntegerStringArray>>,
+    T.Eq<'023', CharArrayToString<['0', '2', '3']>>,
   ]
 >;
 
@@ -43,31 +45,20 @@ type TestNumberToCharArray = T.Test.All<
   [
     T.Eq<['1', '2', '3'], NumberToCharArray<123>>,
     T.Eq<MaxPossibleIntegerStringArray, NumberToCharArray<MaxPossibleInteger>>,
+    T.Eq<['-', '3', '2', '3'], NumberToCharArray<-323>>,
   ]
 >;
 
-export type CharArrayToNumber<A extends string[]> = ParseInt<CharArrayToString<A>>;
+export type CharArrayToNumber<A extends string[]> = TrimLeft<A, '0'> extends []
+  ? 0
+  : ParseInt<CharArrayToString<TrimLeft<A, '0'>>>;
 
 type TestCharArrayToNumber = T.Test.All<
   [
     T.Eq<123, CharArrayToNumber<['1', '2', '3']>>,
     T.Eq<MaxPossibleInteger, CharArrayToNumber<MaxPossibleIntegerStringArray>>,
     T.Eq<MaxPossibleInteger, CharArrayToNumber<NumberToCharArray<MaxPossibleInteger>>>,
+    T.Eq<-323, CharArrayToNumber<['-', '3', '2', '3']>>,
+    T.Eq<23, CharArrayToNumber<['0', '2', '3']>>,
   ]
 >;
-
-// // it loop through object keys
-// type ForLoop<I extends Record<string, string>> = {
-//   // do something with K
-//   [K in keyof I]: DeserializeWC<I[K]>;
-// };
-
-// type A = {
-//   1: '1:1';
-//   2: '2:3';
-//   3: '5:7';
-//   5: '11:13';
-//   4: '17:19';
-// };
-
-// type B = ForLoop<A>;

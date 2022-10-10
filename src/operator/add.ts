@@ -1,6 +1,7 @@
 import T from '@test';
-import { DecimalDigitCharLiteral as D } from '../../digit';
-import { CharArrayToNumber, NumberToCharArray } from '../../parser';
+import { MAX_SAFE_INTEGER } from '../common';
+import { DecimalDigitCharLiteral as D } from '../digit';
+import { CharArrayToNumber, NumberToCharArray } from '../parser';
 
 // prettier-ignore
 type AddMap = {
@@ -58,31 +59,31 @@ type AddCarryMap = {
   }
 };
 
-type CalcAdd<N1 extends D, N2 extends D | '', C extends '' | '1' = ''> = AddMap[C][N1][N2 extends ''
+type AddOne<N1 extends D, N2 extends D | '', C extends '' | '1' = ''> = AddMap[C][N1][N2 extends ''
   ? '0'
   : N2];
-type CalcAddCarry<
+type AddOneCarry<
   N1 extends D,
   N2 extends D | '',
   C extends '' | '1' = '',
 > = AddCarryMap[C][N1][N2 extends '' ? '0' : N2];
 
-type TestCalcAdd = T.Test.All<
+type TestAddOne = T.Test.All<
   [
-    T.Eq<'0', CalcAdd<'0', '0'>>,
-    T.Eq<'1', CalcAdd<'0', '1'>>,
-    T.Eq<'1', CalcAdd<'9', '2'>>,
-    T.Eq<'8', CalcAdd<'9', '9'>>,
-    T.Eq<'9', CalcAdd<'9', '9', '1'>>,
+    T.Eq<'0', AddOne<'0', '0'>>,
+    T.Eq<'1', AddOne<'0', '1'>>,
+    T.Eq<'1', AddOne<'9', '2'>>,
+    T.Eq<'8', AddOne<'9', '9'>>,
+    T.Eq<'9', AddOne<'9', '9', '1'>>,
   ]
 >;
-type TestCalcAddCarry = T.Test.All<
+type TestAddOneCarry = T.Test.All<
   [
-    T.Eq<'', CalcAddCarry<'0', '0'>>,
-    T.Eq<'', CalcAddCarry<'0', '1'>>,
-    T.Eq<'1', CalcAddCarry<'9', '2'>>,
-    T.Eq<'1', CalcAddCarry<'9', '9'>>,
-    T.Eq<'1', CalcAddCarry<'9', '9', '1'>>,
+    T.Eq<'', AddOneCarry<'0', '0'>>,
+    T.Eq<'', AddOneCarry<'0', '1'>>,
+    T.Eq<'1', AddOneCarry<'9', '2'>>,
+    T.Eq<'1', AddOneCarry<'9', '9'>>,
+    T.Eq<'1', AddOneCarry<'9', '9', '1'>>,
   ]
 >;
 
@@ -91,10 +92,10 @@ type _Add<Arr1 extends string[], Arr2 extends string[], CB extends '' | '1' = ''
   infer N1 extends D,
 ]
   ? Arr2 extends [...infer Rest2 extends D[] | [], infer N2 extends D]
-    ? [..._Add<Rest1, Rest2, CalcAddCarry<N1, N2, CB>>, CalcAdd<N1, N2, CB>]
-    : [CalcAddCarry<N1, CB>, CalcAdd<N1, CB>, ...Rest1]
+    ? [..._Add<Rest1, Rest2, AddOneCarry<N1, N2, CB>>, AddOne<N1, N2, CB>]
+    : [AddOneCarry<N1, CB>, AddOne<N1, CB>, ...Rest1]
   : Arr2 extends [...infer Rest2 extends D[] | [], infer N2 extends D]
-  ? [CalcAddCarry<N2, CB>, CalcAdd<N2, CB>, ...Rest2]
+  ? [AddOneCarry<N2, CB>, AddOne<N2, CB>, ...Rest2]
   : [CB, ...Arr2];
 
 export type Add<N1 extends number | bigint, N2 extends number | bigint> = CharArrayToNumber<
@@ -109,6 +110,6 @@ type TestAdd = T.Test.All<
     T.Eq<20, Add<9, 11>>,
     T.Eq<99, Add<9, 90>>,
     T.Eq<100, Add<9, 91>>,
-    T.Eq<9900719925474092, Add<Number.MAX_SAFE_INTEGER, 1>>,
+    T.Eq<9900719925474092, Add<MAX_SAFE_INTEGER, 1>>,
   ]
 >;

@@ -133,3 +133,11 @@ type TestSubsetPass = [
 ];
 
 export type Equal<T1, T2> = Superset<T1, T2> extends true ? Superset<T2, T1> : false;
+
+export type EmptyArray<T> = T extends any[] ? (T['length'] extends 0 ? true : false) : false;
+
+export type Negative<T extends number | bigint> = `${T}` extends `-${infer _ extends
+  | number
+  | bigint}`
+  ? true
+  : false;
